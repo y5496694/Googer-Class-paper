@@ -32,6 +32,9 @@
 </head>
 <body class="p-4 md:p-8">
 
+    <!-- TTS play button -->
+    <button id="tts-play-button" class="hidden fixed z-50 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs" style="line-height:0;">&#9654;</button>
+
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
         
         <!-- 제목 -->
@@ -348,6 +351,41 @@
                 downloadButton.classList.remove('invisible');
             });
         }
+
+        // ====================== TTS 기능 =========================
+        const ttsButton = document.getElementById('tts-play-button');
+
+        document.addEventListener('mouseup', () => {
+            const selection = window.getSelection();
+            if (!selection || selection.isCollapsed) {
+                ttsButton.classList.add('hidden');
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+
+            ttsButton.style.top = `${rect.top + window.scrollY - 10}px`;
+            ttsButton.style.left = `${rect.right + window.scrollX + 5}px`;
+            ttsButton.classList.remove('hidden');
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (!ttsButton.contains(e.target)) {
+                ttsButton.classList.add('hidden');
+            }
+        });
+
+        ttsButton.addEventListener('click', () => {
+            const text = window.getSelection().toString().trim();
+            if (text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ko-KR';
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
+            }
+            ttsButton.classList.add('hidden');
+        });
     </script>
 
 </body>
