@@ -1,8 +1,9 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAkbIpMW8gy3YUquXwaunPj3ZgnuOUUx_E",
+  authDomain: "googer-class-paper.firebaseapp.com",
+  projectId: "googer-class-paper",
+  storageBucket: "googer-class-paper.firebasestorage.app",
+  messagingSenderId: "897629708262",
+  appId: "1:897629708262:web:b02a0aeb6034aa5aa68027",
+  measurementId: "G-XDVXQ32YZV"
 };
