@@ -15,12 +15,16 @@
             const list = document.getElementById('article-list');
             const snapshot = await db.collection('articles').orderBy('updatedAt', 'desc').get();
             snapshot.forEach(doc => {
+                const data = doc.data();
                 const li = document.createElement('li');
+                li.className = 'border-b pb-2';
+                const date = data.updatedAt?.toDate().toLocaleDateString('ko-KR') || '';
                 const a = document.createElement('a');
                 a.href = `index.html?id=${doc.id}`;
                 a.className = 'text-blue-600 underline';
-                a.textContent = doc.data().title || '제목 없음';
+                a.textContent = data.title || '제목 없음';
                 li.appendChild(a);
+                li.appendChild(document.createTextNode(` - ${date} - ${data.author || ''}`));
                 list.appendChild(li);
             });
         }
