@@ -177,7 +177,7 @@
                         <ol class="list-decimal list-inside space-y-3 text-lg text-gray-800">
                 `;
                 questions.forEach(q => {
-                    questionsHTML += `<li>${q}</li>`;
+                    questionsHTML += `<li><p>${q}</p><textarea class="mt-2 w-full p-2 border border-gray-300 rounded-lg" rows="2" placeholder="답을 적어 보세요..."></textarea></li>`;
                 });
                 questionsHTML += `</ol></div>`;
                 worksheetArea.innerHTML += questionsHTML;
