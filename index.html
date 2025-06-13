@@ -8,6 +8,13 @@
     <!-- PDF 저장을 위한 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
     <style>
         /* 기본 폰트 및 배경 설정 */
         @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
@@ -68,7 +75,11 @@
     <button id="tts-play-button" class="hidden fixed z-50 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs" style="line-height:0;">&#9654;</button>
 
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
-        
+
+        <div class="text-right mb-4">
+            <a href="list.html" class="text-blue-600 underline">글 목록</a>
+        </div>
+
         <!-- 제목 -->
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800">AI 초등 국어 활동지 생성기</h1>
@@ -108,7 +119,10 @@
         </div>
 
         <!-- PDF 저장 버튼 -->
-        <div id="action-buttons" class="text-center mt-10 hidden">
+        <div id="action-buttons" class="text-center mt-10 hidden space-x-4">
+            <button id="save-article" onclick="saveArticle()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105">
+                저장하기
+            </button>
             <button id="download-pdf" onclick="downloadPDF()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105">
                 PDF로 저장하기
             </button>
@@ -385,6 +399,51 @@
                 downloadButton.classList.remove('invisible');
             });
         }
+
+        async function saveArticle() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const topic = document.getElementById('topic').value;
+            const wordCount = document.getElementById('word_count').value;
+            const titleElem = worksheetArea.querySelector('h2');
+            const title = titleElem ? titleElem.textContent.replace(/\[|\]/g, '') : '';
+            const html = worksheetArea.innerHTML;
+            const answers = Array.from(document.querySelectorAll('.questions textarea')).map(el => el.value);
+
+            const data = { topic, wordCount, title, html, answers, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+
+            try {
+                if (id) {
+                    await db.collection('articles').doc(id).set(data);
+                } else {
+                    const docRef = await db.collection('articles').add(data);
+                    window.location.search = '?id=' + docRef.id;
+                }
+                alert('저장되었습니다.');
+            } catch (err) {
+                console.error('저장 오류:', err);
+                alert('저장 중 오류가 발생했습니다.');
+            }
+        }
+
+        async function loadArticleForEdit() {
+            const id = new URLSearchParams(window.location.search).get('id');
+            if (!id) return;
+            try {
+                const doc = await db.collection('articles').doc(id).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('topic').value = data.topic || '';
+                    document.getElementById('word_count').value = data.wordCount || '';
+                    worksheetArea.innerHTML = data.html || '';
+                    actionButtons.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('불러오기 오류:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadArticleForEdit);
 
         // ====================== TTS 기능 =========================
         const ttsButton = document.getElementById('tts-play-button');
