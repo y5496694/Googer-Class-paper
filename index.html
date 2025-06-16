@@ -436,6 +436,7 @@
 
         // ====================== TTS 기능 =========================
         const ttsButton = document.getElementById('tts-play-button');
+        const TTS_RATE = 0.8; // 재생 속도 조절을 위한 상수
 
         document.addEventListener('mouseup', () => {
             const selection = window.getSelection();
@@ -463,6 +464,7 @@
             if (text) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'ko-KR';
+                utterance.rate = TTS_RATE;
                 speechSynthesis.cancel();
                 speechSynthesis.speak(utterance);
             }
@@ -474,6 +476,7 @@
                 if (text) {
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = 'ko-KR';
+                    utterance.rate = TTS_RATE;
                     speechSynthesis.cancel();
                     speechSynthesis.speak(utterance);
                 }
@@ -482,6 +485,7 @@
                 if (text) {
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = 'ko-KR';
+                    utterance.rate = TTS_RATE;
                     speechSynthesis.cancel();
                     speechSynthesis.speak(utterance);
                 }
@@ -490,6 +494,7 @@
                 if (text) {
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = 'ko-KR';
+                    utterance.rate = TTS_RATE;
                     speechSynthesis.cancel();
                     speechSynthesis.speak(utterance);
                 }
@@ -498,6 +503,7 @@
                 if (text) {
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = 'ko-KR';
+                    utterance.rate = TTS_RATE;
                     speechSynthesis.cancel();
                     speechSynthesis.speak(utterance);
                 }
