@@ -15,7 +15,7 @@
         .loader.math { border-top: 8px solid #ef4444; }
         .loader.book { border-top: 8px solid #10b981; }
         .loader.dictation { border-top: 8px solid #14b8a6; }
-        .loader.word { border-top: 8px solid #8b5cf6; }
+        .loader.writing { border-top: 8px solid #8b5cf6; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         .tts-word { cursor: pointer; transition: color 0.2s; }
@@ -37,24 +37,19 @@
         .text-hidden, .text-hidden .tts-word { color: transparent !important; }
         .text-box.text-hidden { background-color: rgba(255, 255, 255, 0) !important; border-color: transparent !important; }
         .answer-hidden { color: transparent; user-select: none; }
-        .hangul-btn { transition: background-color 0.2s, transform 0.1s; }
-        .hangul-btn:hover { background-color: #e0e7ff; }
-        .hangul-btn:active { transform: scale(0.95); }
-        .quiz-btn[data-quiz-state="1"] { background-color: rgba(251, 146, 60, 0.8) !important; } /* 주황색 */
-        .quiz-btn[data-quiz-state="2"] { background-color: rgba(239, 68, 68, 0.8) !important; } /* 빨간색 */
     </style>
 </head>
 <body class="p-2 md:p-8 bg-gray-100">
 
     <div id="app-container">
-        <!-- 페이지들을 여기에 정의 -->
+        <!-- 국어 활동지 페이지 -->
         <div id="korean-page" class="page-content max-w-4xl mx-auto">
              <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
                 <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
                     <h1 class="text-2xl md:text-4xl font-bold text-gray-800">AI 초등 국어 활동지</h1>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="showPage('dictation')" class="bg-teal-200 text-teal-700 font-bold py-2 px-4 rounded-lg hover:bg-teal-300 transition">AI 받아쓰기 →</button>
-                        <button onclick="showPage('word')" class="bg-violet-200 text-violet-700 font-bold py-2 px-4 rounded-lg hover:bg-violet-300 transition">낱말 활동지 →</button>
+                        <button onclick="showPage('writing')" class="bg-violet-200 text-violet-700 font-bold py-2 px-4 rounded-lg hover:bg-violet-300 transition">쓰기 활동지 →</button>
                         <button onclick="showPage('book-creator')" class="bg-emerald-200 text-emerald-700 font-bold py-2 px-4 rounded-lg hover:bg-emerald-300 transition">책 만들기 →</button>
                         <button onclick="showPage('math')" class="bg-rose-200 text-rose-700 font-bold py-2 px-4 rounded-lg hover:bg-rose-300 transition">AI 수학 문제 →</button>
                     </div>
@@ -71,6 +66,7 @@
             </div>
         </div>
 
+        <!-- 받아쓰기 페이지 -->
         <div id="dictation-page" class="page-content max-w-4xl mx-auto hidden">
             <div class="bg-teal-50 rounded-2xl shadow-lg p-6 md:p-10">
                 <header class="flex justify-between items-center mb-8"><h1 class="text-2xl md:text-4xl font-bold text-teal-800">AI 받아쓰기</h1><button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button></header>
@@ -92,47 +88,17 @@
             </div>
         </div>
 
-        <div id="word-page" class="page-content max-w-7xl mx-auto hidden">
+        <!-- 쓰기 활동지 페이지 (Placeholder) -->
+        <div id="writing-page" class="page-content max-w-4xl mx-auto hidden">
             <div class="bg-violet-50 rounded-2xl shadow-lg p-6 md:p-10">
-                <header class="flex justify-between items-center mb-8"><h1 class="text-2xl md:text-4xl font-bold text-violet-800">낱말 활동지</h1><button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button></header>
-                <div class="mt-8 bg-white p-4 md:p-6 rounded-lg overflow-x-auto">
-                    <p class="text-lg text-gray-700 mb-4">자음과 모음이 만나 어떤 소리가 나는지 눌러서 확인해보세요!</p>
-                    <div class="flex justify-center flex-wrap gap-4 mb-4 border-b pb-4">
-                        <div class="flex rounded-lg shadow-sm">
-                            <button id="single-vowel-btn" onclick="setVowelType('single')" class="font-bold py-2 px-6 rounded-l-lg">단모음</button>
-                            <button id="double-vowel-btn" onclick="setVowelType('double')" class="font-bold py-2 px-6 rounded-r-lg">이중모음</button>
-                        </div>
-                         <div class="flex rounded-lg shadow-sm">
-                            <button id="tense-exclude-btn" onclick="setTenseInclusion(false)" class="font-bold py-2 px-6 rounded-l-lg">된소리 제거</button>
-                            <button id="tense-include-btn" onclick="setTenseInclusion(true)" class="font-bold py-2 px-6 rounded-r-lg">된소리 추가</button>
-                        </div>
-                    </div>
-                    <div id="hangul-table-container"></div>
-                    <div class="mt-6 text-center">
-                        <button onclick="startHangulQuiz()" class="bg-orange-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-orange-600">자모음표 퀴즈</button>
-                    </div>
+                <header class="flex justify-between items-center mb-8"><h1 class="text-2xl md:text-4xl font-bold text-violet-800">쓰기 활동지</h1><button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button></header>
+                <div class="text-center py-20">
+                    <p class="text-2xl text-violet-700">이 기능은 현재 준비 중입니다. 🚀</p>
                 </div>
             </div>
         </div>
         
-        <div id="quiz-page" class="page-content max-w-7xl mx-auto hidden">
-            <div class="bg-orange-50 rounded-2xl shadow-lg p-6 md:p-10">
-                 <header class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl md:text-4xl font-bold text-orange-800">자모음표 퀴즈</h1>
-                    <div class="flex items-center gap-2">
-                        <label for="quiz-name" class="font-semibold">이름:</label>
-                        <input type="text" id="quiz-name" class="p-2 border rounded-lg" placeholder="이름 입력">
-                        <button onclick="showPage('word')" class="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">← 돌아가기</button>
-                    </div>
-                </header>
-                <div id="quiz-table-container" class="mt-4 bg-white p-4 md:p-6 rounded-lg overflow-x-auto"></div>
-                <div class="mt-6 text-center">
-                    <button onclick="gradeQuiz()" class="bg-orange-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-orange-600">채점하기</button>
-                </div>
-                <div id="quiz-result-area" class="mt-8"></div>
-            </div>
-        </div>
-
+        <!-- 수학 문제 페이지 -->
         <div id="math-page" class="page-content max-w-4xl mx-auto hidden">
             <div class="bg-rose-50 rounded-2xl shadow-lg p-6 md:p-10">
                 <header class="flex justify-between items-center mb-8"><h1 class="text-2xl md:text-4xl font-bold text-rose-800">AI 수학 문장제 문제</h1><button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button></header>
@@ -148,6 +114,7 @@
             </div>
         </div>
         
+        <!-- 책 만들기 페이지 -->
         <div id="book-creator-page" class="page-content max-w-4xl mx-auto hidden">
              <div class="bg-emerald-50 rounded-2xl shadow-lg p-6 md:p-10">
                 <header class="flex justify-between items-center mb-8"><h1 class="text-2xl md:text-4xl font-bold text-emerald-800">AI 동화책 만들기</h1><button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button></header>
@@ -174,6 +141,7 @@
             </div>
         </div>
 
+        <!-- 책 뷰어 페이지 -->
         <div id="book-viewer-page" class="page-content max-w-7xl mx-auto hidden">
             <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
                 <div id="viewer-controls" class="flex justify-between items-center mb-4">
@@ -201,135 +169,231 @@
     </div>
 
     <script>
-        // 전역 변수 및 상수
         const GEMINI_API_KEY = "AIzaSyC7_Gq4LIVVMv0hMD6qSwcTlGJcDSt-KgI";
         const STABILITY_API_KEY = "sk-1O2c3lhxjfCfQizxRNllhxgEa8jJiNw01ebyzIOadQFFmdh1";
         const TEXT_MODEL = "gemini-2.0-flash";
+        
         let mathProblems = [], bookCurrentPage = 0, totalBookSpreads = 0, isManualBookMode = false;
-        let currentVowelType = 'single', includeTense = false;
 
-        // --- 유틸리티 및 공통 함수 ---
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
             document.getElementById(`${pageId}-page`).classList.remove('hidden');
             window.scrollTo(0, 0);
-            if (pageId === 'word') {
-                setVowelType('single');
-                setTenseInclusion(false);
-            }
         }
-        function speak(text) { if (window.speechSynthesis) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 0.9; window.speechSynthesis.speak(u); } }
 
-        // --- 낱말 활동지 & 퀴즈 로직 ---
-        function setVowelType(type) { currentVowelType = type; updateHangulTableButtons(); generateHangulTable(false); }
-        function setTenseInclusion(include) { includeTense = include; updateHangulTableButtons(); generateHangulTable(false); }
-        function updateHangulTableButtons() {
-            const btnStates = {
-                'single-vowel-btn': currentVowelType === 'single', 'double-vowel-btn': currentVowelType === 'double',
-                'tense-exclude-btn': !includeTense, 'tense-include-btn': includeTense
-            };
-            const colorClasses = {
-                'single-vowel-btn': ['violet', 'violet'], 'double-vowel-btn': ['violet', 'violet'],
-                'tense-exclude-btn': ['indigo', 'indigo'], 'tense-include-btn': ['indigo', 'indigo']
-            };
-            for (const [id, isActive] of Object.entries(btnStates)) {
-                const btn = document.getElementById(id);
-                const [activeColor] = colorClasses[id];
-                btn.classList.toggle(`bg-${activeColor}-600`, isActive);
-                btn.classList.toggle('text-white', isActive);
-                btn.classList.toggle('bg-white', !isActive);
-                btn.classList.toggle(`text-${activeColor}-600`, !isActive);
-                btn.classList.toggle(`border-${activeColor}-600`, !isActive);
-            }
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ko-KR';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } else { alert("음성 지원이 되지 않는 브라우저입니다."); }
         }
-        function generateHangulTable(isQuiz = false) {
-            const container = document.getElementById(isQuiz ? 'quiz-table-container' : 'hangul-table-container');
-            container.innerHTML = ''; 
-            const CHO_ALL = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-            const CHO_BASIC = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-            const JUNG_ALL = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'];
-            const JUNG_SINGLE = ['ㅏ', 'ㅑ', 'ㅓ', 'ㅕ', 'ㅗ', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ'];
-            const JUNG_DOUBLE = ['ㅐ', 'ㅒ', 'ㅔ', 'ㅖ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅢ'];
-            const consonantsToShow = includeTense ? CHO_ALL : CHO_BASIC;
-            const vowelsToShow = currentVowelType === 'single' ? JUNG_SINGLE : JUNG_DOUBLE;
-            const table = document.createElement('table'); table.className = 'w-full border-collapse text-center';
-            const thead = table.createTHead(); const headerRow = thead.insertRow(); headerRow.className = 'bg-violet-100';
-            const emptyCell = headerRow.insertCell(); emptyCell.className = 'p-1 md:p-2 border border-violet-200';
-            vowelsToShow.forEach(vowel => { const th = document.createElement('th'); th.className = 'p-1 md:p-2 border border-violet-200'; th.innerHTML = `<button onclick="${isQuiz ? '' : `speak('${vowel}')`}" class="hangul-btn w-full h-full text-base md:text-lg font-bold text-violet-800">${vowel}</button>`; headerRow.appendChild(th); });
-            const tbody = table.createTBody();
-            consonantsToShow.forEach(consonant => {
-                const row = tbody.insertRow(); const consonantCell = row.insertCell(); consonantCell.className = 'p-1 md:p-2 border border-violet-200 bg-violet-100';
-                consonantCell.innerHTML = `<button onclick="${isQuiz ? '' : `speak('${consonant}')`}" class="hangul-btn w-full h-full text-base md:text-lg font-bold text-violet-800">${consonant}</button>`;
-                vowelsToShow.forEach(vowel => {
-                    const syllableCell = row.insertCell(); syllableCell.className = 'p-1 md:p-2 border border-violet-200';
-                    const choIndex = CHO_ALL.indexOf(consonant); const jungIndex = JUNG_ALL.indexOf(vowel);
-                    if (choIndex !== -1 && jungIndex !== -1) {
-                        const syllable = String.fromCharCode(0xAC00 + choIndex * 21 * 28 + jungIndex * 28);
-                        syllableCell.innerHTML = `<button onclick="${isQuiz ? 'handleQuizCellClick(this)' : `speak('${syllable}')`}" class="hangul-btn ${isQuiz ? 'quiz-btn' : ''} w-full h-full text-base md:text-lg" data-quiz-state="0">${syllable}</button>`;
+
+        // --- 받아쓰기 로직 ---
+        async function generateDictation() {
+            const topic = document.getElementById('dictation-topic').value;
+            const count = document.getElementById('dictation-count').value;
+            const type = document.querySelector('input[name="dictationType"]:checked').value;
+            if (!topic || !count) { alert("주제와 문항 개수를 모두 입력해주세요!"); return; }
+
+            const loadingSection = document.getElementById('dictation-loading-section');
+            const errorSection = document.getElementById('dictation-error-section');
+            const dictationArea = document.getElementById('dictation-area');
+            const resultsSection = document.getElementById('dictation-results-section');
+
+            loadingSection.classList.remove('hidden');
+            errorSection.classList.add('hidden');
+            dictationArea.innerHTML = '';
+            resultsSection.classList.add('hidden');
+
+            try {
+                const prompt = type === 'sentence' 
+                    ? `'${topic}'(이)라는 주제로 초등학생용 받아쓰기 문장을 ${count}개 만들어줘. 짧고 간단한 문장으로 부탁해.`
+                    : `'${topic}'(이)라는 주제와 관련된, 초등학생용 받아쓰기 단어를 ${count}개 만들어줘.`;
+
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: { type: "OBJECT", properties: { items: { type: "ARRAY", items: { type: "STRING" }}}, required: ["items"] }
                     }
+                };
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`받아쓰기 생성 API 오류: ${response.statusText}`);
+                const result = await response.json();
+                
+                if (!result.candidates?.[0]?.content?.parts?.[0]?.text) throw new Error("받아쓰기 생성 API로부터 유효한 데이터를 받지 못했습니다.");
+                const { items } = JSON.parse(result.candidates[0].content.parts[0].text);
+                
+                items.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'bg-white p-4 rounded-lg shadow flex items-center gap-4';
+                    itemDiv.innerHTML = `
+                        <span class="font-bold text-lg text-teal-700">${index + 1}.</span>
+                        <button onclick="speak('${item.replace(/'/g, "\\'")}')" class="bg-teal-500 text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">▶</button>
+                        <p class="dictation-answer-text answer-hidden text-lg flex-1">${item}</p>
+                    `;
+                    dictationArea.appendChild(itemDiv);
                 });
-            });
-            container.appendChild(table);
-        }
-        function startHangulQuiz() { generateHangulTable(true); showPage('quiz'); document.getElementById('quiz-result-area').innerHTML = '';}
-        function handleQuizCellClick(btn) { let state = parseInt(btn.dataset.quizState); state = (state + 1) % 3; btn.dataset.quizState = state; }
-        function gradeQuiz() {
-            const name = document.getElementById('quiz-name').value || '학생';
-            const date = new Date().toLocaleString('ko-KR');
-            const results = { correct: [], practice: [], study: [] };
-            document.querySelectorAll('#quiz-table-container .quiz-btn').forEach(btn => {
-                const state = parseInt(btn.dataset.quizState);
-                if (state === 0) results.correct.push(btn.textContent);
-                else if (state === 1) results.practice.push(btn.textContent);
-                else if (state === 2) results.study.push(btn.textContent);
-            });
-            const resultArea = document.getElementById('quiz-result-area');
-            resultArea.innerHTML = `
-                <div id="quiz-result-content" class="mt-8 bg-white p-6 rounded-lg shadow-inner">
-                    <h3 class="text-2xl font-bold text-center text-orange-800 mb-4">채점 결과</h3>
-                    <p class="text-md text-gray-600"><strong>날짜:</strong> ${date}</p>
-                    <p class="text-md text-gray-600 mb-4"><strong>이름:</strong> ${name}</p>
-                    <div class="space-y-2">
-                        <p><strong><span class="text-green-600">정답</span>:</strong> ${results.correct.join(', ')}</p>
-                        <p><strong><span class="text-orange-500">연습</span>:</strong> ${results.practice.join(', ')}</p>
-                        <p><strong><span class="text-red-500">공부</span>:</strong> ${results.study.join(', ')}</p>
-                    </div>
-                </div>
-                <div class="mt-4 text-center">
-                    <button onclick="downloadQuizResult()" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">이미지로 다운로드</button>
-                </div>
-            `;
-        }
-        function downloadQuizResult() { const element = document.getElementById('quiz-result-content'); html2canvas(element, {scale: 2}).then(canvas => { const link = document.createElement('a'); link.download = '자모음표_퀴즈결과.png'; link.href = canvas.toDataURL(); link.click(); }); }
+                resultsSection.classList.remove('hidden');
 
-        // --- (이하 나머지 코드들은 생략됨 - 이전 버전과 동일) ---
-        // 코드가 너무 길어지는 것을 방지하기 위해, 이전 버전과 동일한 국어, 수학, 책 만들기, 받아쓰기 관련 함수들은 생략합니다.
-        // 실제 실행을 위해서는 이전에 제공된 모든 함수들이 여기에 포함되어야 합니다.
-    </script>
-    <script>
-    // 이 스크립트 태그에 이전 코드의 나머지 함수들을 모두 복사하여 붙여넣습니다.
-    async function generateDictation(){const t=document.getElementById("dictation-topic").value,e=document.getElementById("dictation-count").value,n=document.querySelector('input[name="dictationType"]:checked').value;if(!t||!e)return void alert("주제와 문항 개수를 모두 입력해주세요!");const o=document.getElementById("dictation-loading-section"),a=document.getElementById("dictation-error-section"),i=document.getElementById("dictation-area"),d=document.getElementById("dictation-results-section");o.classList.remove("hidden"),a.classList.add("hidden"),i.innerHTML="",d.classList.add("hidden");try{const t="sentence"===n?`'${topic}'(이)라는 주제로 초등학생용 받아쓰기 문장을 ${e}개 만들어줘. 짧고 간단한 문장으로 부탁해.`:`'${topic}'(이)라는 주제와 관련된, 초등학생용 받아쓰기 단어를 ${e}개 만들어줘.`,r={contents:[{role:"user",parts:[{text:t}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{items:{type:"ARRAY",items:{type:"STRING"}}},required:["items"]}}},s=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(r)});if(!s.ok)throw new Error(`받아쓰기 생성 API 오류: ${s.statusText}`);const c=await s.json();if(!c.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("받아쓰기 생성 API로부터 유효한 데이터를 받지 못했습니다.");JSON.parse(c.candidates[0].content.parts[0].text).items.forEach((t,e)=>{const n=document.createElement("div");n.className="bg-white p-4 rounded-lg shadow flex items-center gap-4",n.innerHTML=`<span class="font-bold text-lg text-teal-700">${e+1}.</span><button onclick="speak('${t.replace(/'/g,"\\'")}')" class="bg-teal-500 text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">▶</button><p class="dictation-answer-text answer-hidden text-lg flex-1">${t}</p>`,i.appendChild(n)}),d.classList.remove("hidden")}catch(t){console.error("받아쓰기 생성 오류:",t),a.classList.remove("hidden"),document.getElementById("dictation-error-message").textContent=`오류가 발생했습니다: ${t.message}`}finally{o.classList.add("hidden")}}
-    function revealDictationAnswers(){document.querySelectorAll(".dictation-answer-text").forEach(t=>{t.classList.remove("answer-hidden")})}async function generateBook(){isManualBookMode=!1;const t=document.getElementById("book-topic").value,e=document.getElementById("book-title").value,n=document.getElementById("book-plot").value,o=document.getElementById("book-sheets").value,a=document.getElementById("book-author").value,i=document.getElementById("empty-content-checkbox").checked;if(!t||!e||!n||!o||!a)return void alert("모든 항목을 입력해주세요.");if(o<3)return void alert("장 수는 3장 이상이어야 합니다.");const d=document.getElementById("book-loading-section"),r=document.getElementById("book-error-section");d.classList.remove("hidden"),r.classList.add("hidden");try{const t=await generateStory(topic.value,e,n,o-1),a=await Promise.all([e,...t].map(t=>generateImageForParagraph(t)));buildBookViewer(e,author.value,t,a,i),showPage("book-viewer")}catch(t){console.error("책 만들기 오류:",t),r.classList.remove("hidden"),document.getElementById("book-error-message").textContent=`오류가 발생했습니다: ${t.message}`}finally{d.classList.add("hidden")}}
-    function startManualBookCreation(){isManualBookMode=!0,buildBookViewer(null,null,[],[],!1),showPage("book-viewer")}
-    function addManualPage(){const t=document.getElementById("book-viewer"),e=t.querySelectorAll(".book-spread").length,n=document.createElement("div");n.className="book-spread book-viewer",n.id=`spread-${e}`;const o=document.createElement("div");o.className="book-page bg-gray-200 border-r border-gray-300 flex items-center justify-center",o.innerHTML=`<span class="text-gray-400">그림이 생성될 곳</span><div class="page-number" style="left: 0.5rem;">${2*e-1}</div>`;const a=document.createElement("div");a.className="book-page bg-white",a.innerHTML=`<textarea class="manual-text-area" placeholder="여기에 이야기를 입력하세요..."></textarea><div class="page-number" style="right: 0.5rem;">${2*e}</div>`,n.appendChild(o),n.appendChild(a),t.insertBefore(n,document.getElementById("prev-page-btn")),totalBookSpreads++,changeBookPage(totalBookSpreads-1)}
-    async function completeManualBook(){const t=document.querySelector("#manual-controls button:last-child");t.textContent="그림 생성 중...",t.disabled=!0;const e=document.getElementById("manual-book-context").value;try{const n=document.querySelector("#spread-0 .editable-text").textContent,o=await generateImageForParagraph(n,e);document.querySelector("#spread-0 .book-page:last-child").style.backgroundImage=`url('${o}')`;const a=document.querySelectorAll(".book-spread");for(let t=1;t<a.length;t++){const n=a[t].querySelector("textarea").value;if(n){const o=await generateImageForParagraph(n,e),i=a[t].querySelector(".book-page:first-child");i.style.backgroundImage=`url('${o}')`,i.innerHTML=`<div class="page-number" style="left: 0.5rem;">${2*(t-1)+1}</div>`}}alert("책이 완성되었습니다! 이제 글을 편집하거나 PDF로 저장할 수 있습니다."),t.textContent="그림 다시 만들기"}catch(t){console.error("수동 책 완성 오류:",t),alert(`그림 생성 중 오류가 발생했습니다: ${t.message}`),t.textContent="책 완성하기"}finally{t.disabled=!1}}
-    async function generateStory(t,e,n,o){const a=`'${t}'를 주제로, 제목은 '${e}', 줄거리는 '${n}'인 동화책 이야기를 만들어줘. 이야기는 총 ${o}개의 문단으로 나누어줘. 각 문단은 어린이가 이해하기 쉬운 문체여야 해. 특히, 이야기의 마지막 문단은 모든 사건이 깔끔하게 마무리되는 결말이어야 해. 전체적인 구조는 기승전결(시작-전개-위기-절정-결말)을 따라야 해.`,i={contents:[{role:"user",parts:[{text:a}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{story_parts:{type:"ARRAY",items:{type:"STRING"}}},required:["story_parts"]}}},d=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(i)});if(!d.ok)throw new Error(`스토리 생성 API 오류: ${d.statusText}`);const r=await d.json(),s=JSON.parse(r.candidates[0].content.parts[0].text);if(!s.story_parts)throw new Error("스토리 생성 API로부터 유효한 데이터를 받지 못했습니다.");return s.story_parts}
-    function buildBookViewer(t,e,n,o,a=!1){const i=document.getElementById("book-viewer");i.innerHTML="",document.getElementById("manual-controls").classList.toggle("hidden",!isManualBookMode),document.getElementById("standard-controls").classList.toggle("hidden",isManualBookMode),document.getElementById("manual-book-context-wrapper").classList.toggle("hidden",!isManualBookMode),document.getElementById("toggle-text-visibility-checkbox").checked=a;const d=a?"text-hidden":"";if(isManualBookMode)totalBookSpreads=1,i.innerHTML='<div id="spread-0" class="book-spread book-viewer active"><div class="book-page bg-white border-r border-gray-300"><div class="text-box"><h1 class="text-3xl font-bold editable-text" contenteditable="true">제목을 입력하세요</h1></div></div><div class="book-page bg-gray-200"><div class="absolute bottom-4 right-4 text-box"><p class="editable-text" contenteditable="true">글쓴이</p></div></div></div>';else{totalBookSpreads=1+n.length;for(let a=0;a<totalBookSpreads;a++){const r=document.createElement("div");r.className="book-spread book-viewer",r.id=`spread-${a}`;const s=document.createElement("div");if(s.className="book-page bg-white border-r border-gray-300",0===a)s.innerHTML=`<div class="text-box"><h1 class="text-3xl font-bold editable-text ${d}">${t}</h1></div>`;else{o[a]&&(s.style.backgroundImage=`url('${o[a]}')`),s.innerHTML+=`<div class="page-number" style="left: 0.5rem;">${2*(a-1)+1}</div>`}r.appendChild(s);const c=document.createElement("div");if(c.className="book-page bg-white",0===a)o[0]&&(c.style.backgroundImage=`url('${o[0]}')`),c.innerHTML=`<div class="text-box"><h1 class="text-3xl font-bold editable-text ${d}">${t}</h1></div><div class="absolute bottom-4 right-4 text-box"><p class="editable-text ${d}">${e}</p></div>`;else{const t=a-1;if(n[t]){const e=n[t],o=e.split(/\s+/).map(t=>`<span class="tts-word">${t}</span>`).join(" ");c.innerHTML=`<div class="h-full w-full flex items-center justify-center"><p class="text-xl leading-loose editable-text ${d}">${o}</p></div>`,c.innerHTML+=`<div class="page-number" style="right: 0.5rem;">${2*(a-1)+2}</div>`}}r.appendChild(c),i.appendChild(r)}}i.innerHTML+='<button id="prev-page-btn" onclick="changeBookPage(-1)" class="page-nav left-2">‹</button><button id="next-page-btn" onclick="changeBookPage(1)" class="page-nav right-2">›</button><button id="read-aloud-btn" onclick="readCurrentPage()" class="absolute top-4 right-4 bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl z-10">🔊</button>',bookCurrentPage=0,updateBookView()}
-    function toggleTextVisibility(){const t=document.getElementById("toggle-text-visibility-checkbox").checked;document.querySelectorAll("#book-viewer .editable-text").forEach(e=>{e.classList.toggle("text-hidden",t)})}
-    function changeBookPage(t){bookCurrentPage+=t,updateBookView()}
-    function updateBookView(){document.querySelectorAll(".book-spread").forEach((t,e)=>{t.classList.toggle("active",e===bookCurrentPage)}),document.getElementById("prev-page-btn").style.display=0===bookCurrentPage?"none":"block",document.getElementById("next-page-btn").style.display=bookCurrentPage>=totalBookSpreads-1?"none":"block"}
-    function readCurrentPage(){const t=document.getElementById(`spread-${bookCurrentPage}`);t&&speak(t.textContent.trim())}
-    function toggleBookEdit(){const t=document.getElementById("edit-book-btn"),e="편집 완료"===t.textContent;document.querySelectorAll("#book-viewer .editable-text, #book-viewer .manual-text-area").forEach(t=>{t.contentEditable=!e,t.classList.toggle("outline-blue-500",!e),t.classList.toggle("outline",!e)}),t.textContent=e?"글 편집":"편집 완료",t.classList.toggle("bg-blue-500",e),t.classList.toggle("bg-red-500",!e)}
-    async function downloadBookAsPDF(){const t=document.getElementById("save-book-pdf-btn");t.textContent="PDF 생성 중...",t.disabled=!0;const{jsPDF:e}=window,n=new e({orientation:"landscape",unit:"mm",format:"a4"}),o=document.querySelectorAll(".book-spread"),a=bookCurrentPage;for(let t=0;t<o.length;t++){t>0&&n.addPage("a4","l"),document.querySelectorAll(".book-spread").forEach(t=>{t.classList.remove("active")}),o[t].classList.add("active"),await new Promise(t=>setTimeout(t,50));const e=await html2canvas(o[t],{scale:2,useCORS:!0,backgroundColor:"#ffffff"});n.addImage(e.toDataURL("image/png"),"PNG",0,0,297,210)}n.save("AI_동화책.pdf"),document.querySelectorAll(".book-spread").forEach(t=>{t.classList.remove("active")}),o[a]&&o[a].classList.add("active"),t.textContent="PDF 저장",t.disabled=!1}
-    document.addEventListener("click",t=>{const e=t.target;e.closest("#korean-page")?e.classList.contains("tts-word")?speak(e.textContent.trim()):e.matches(".korean-tts-btn")&&speak(e.getAttribute("data-text")):e.closest("#book-viewer-page")?e.classList.contains("tts-word")&&speak(e.textContent.trim()):e.closest("#math-page")&&e.classList.contains("tts-word")&&speak(e.textContent.trim().replace(/'/g,"\\'"))});
-    async function generateKoreanWorksheet(){const t=document.getElementById("topic").value,e=document.getElementById("word_count").value;if(!t||!e)return void alert("주제와 글자 수를 모두 입력해주세요!");const n=document.getElementById("korean-loading-section"),o=document.getElementById("korean-error-section"),a=document.getElementById("korean-worksheet-area"),i=document.getElementById("korean-action-buttons");n.classList.remove("hidden"),o.classList.add("hidden"),a.innerHTML="",i.classList.add("hidden");try{const{title:t,paragraphs:e}=await generateText(topic.value,wordCount.value);a.innerHTML=`<div class="relative text-center mb-6"><button class="korean-tts-btn title-tts" data-text="${t}">▶</button><h2 class="text-2xl md:text-3xl font-bold">[${t}]</h2></div>`;const n=await Promise.all(e.map(async(t,n)=>{const o=await generateImageForParagraph(t),a=t.split(/\s+/).map(t=>`<span class="tts-word">${t}</span>`).join(" ");return`<div class="paragraph-block mb-8 relative"><button class="korean-tts-btn paragraph-tts" data-text="${t}">▶</button><p class="text-lg md:text-xl leading-relaxed bg-gray-50 p-4 rounded-lg"><strong>[${n+1}문단]</strong> ${a}</p><div class="flex justify-center my-4"><img src="${o}" alt="${topic.value} 관련 이미지" class="rounded-lg shadow-md max-w-sm w-full h-auto border-4 border-white"></div></div>`}));a.innerHTML+=n.join("");const o=e.join("\n\n"),d=await generateQuestions(o);let r='<div class="questions mt-10 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl"><h3 class="text-xl md:text-2xl font-bold text-yellow-800 mb-4">💡 글을 읽고 질문에 답해 보아요!</h3><ol class="list-decimal list-inside space-y-3 text-lg text-gray-800">';d.forEach(t=>{const e=t.split(/\s+/).map(t=>`<span class="tts-word">${t}</span>`).join(" ");r+=`<li class="relative pl-2"><button class="korean-tts-btn question-tts" data-text="${t}">▶</button><p>${e}</p><textarea class="mt-2 w-full p-2 border border-gray-300 rounded-lg" rows="2" placeholder="답을 적어 보세요..."></textarea></li>`}),r+="</ol></div>",a.innerHTML+=r,i.classList.remove("hidden")}catch(t){console.error("국어 활동지 생성 오류:",t),o.classList.remove("hidden"),document.getElementById("korean-error-message").textContent=`오류가 발생했습니다: ${t.message}`}finally{n.classList.add("hidden")}}
-    async function generateText(t,e){const n=`'${t}'라는 주제로 초등학생이 이해하기 쉽도록 약 ${e} 단어 분량의 글을 작성해 줘. 글은 반드시 총 4개의 문단으로 나누고, 각 문단의 내용은 명확하게 구분되어야 해. 전체 글에 대한 제목도 만들어줘.`,o={contents:[{role:"user",parts:[{text:n}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{title:{type:"STRING"},paragraphs:{type:"ARRAY",items:{type:"STRING"}}},required:["title","paragraphs"]}}},a=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)});if(!a.ok)throw new Error(`글 생성 API 오류: ${a.statusText}`);const i=await a.json();if(!i.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("글 생성 API로부터 유효한 데이터를 받지 못했습니다.");return JSON.parse(i.candidates[0].content.parts[0].text)}
-    async function generateQuestions(t){const e="다음 글을 읽고, 초등학생 수준에서 글의 내용을 잘 이해했는지 확인할 수 있는 이해력 질문 4개를 만들어줘.",n={contents:[{role:"user",parts:[{text:e},{text:`글 내용:\n${t}`}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{questions:{type:"ARRAY",items:{type:"STRING"}}},required:["questions"]}}},o=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(n)});if(!o.ok)throw new Error(`질문 생성 API 오류: ${o.statusText}`);const a=await o.json();if(!a.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("질문 생성 API로부터 유효한 데이터를 받지 못했습니다.");return JSON.parse(a.candidates[0].content.parts[0].text).questions}
-    function downloadPDF(t){const{jsPDF:e}=window,n=document.getElementById(t);html2canvas(n,{scale:2,useCORS:!0}).then(t=>{const n=t.toDataURL("image/png"),o=new e("p","mm","a4"),a=o.getImageProperties(n),i=o.internal.pageSize.getWidth(),d=a.height*i/a.width;o.addImage(n,"PNG",0,0,i,d),o.save("AI_활동지.pdf")})}
-    async function generateMathProblems(){const t=document.getElementById("math-example").value,e=document.getElementById("math-count").value;if(!t||!e)return void alert("문제 예시와 문제 수를 모두 입력해주세요!");const n=document.getElementById("math-loading-section"),o=document.getElementById("math-error-section"),a=document.getElementById("math-problems-area"),i=document.getElementById("math-results-section");n.classList.remove("hidden"),o.classList.add("hidden"),a.innerHTML="",i.classList.add("hidden");try{const t=`'${example.value}'와 비슷한 유형의 초등학생용 수학 문장제 문제를 ${count.value}개 만들어줘. 각 문제에는 질문(problem)과 숫자 정답(answer)이 포함되어야 해.`,n={contents:[{role:"user",parts:[{text:t}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"ARRAY",items:{type:"OBJECT",properties:{problem:{type:"STRING"},answer:{type:"NUMBER"}},required:["problem","answer"]}}}},d=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(n)});if(!d.ok)throw new Error(`수학 문제 생성 API 오류: ${d.statusText}`);const r=await d.json();if(!r.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("수학 문제 생성 API로부터 유효한 데이터를 받지 못했습니다.");mathProblems=JSON.parse(r.candidates[0].content.parts[0].text),mathProblems.forEach((t,e)=>{t.status="pending";const n=t.problem.split(" ").map(t=>`<span class="tts-word">${t}</span>`).join(" "),o=document.createElement("div");o.className="bg-white p-5 rounded-lg shadow",o.innerHTML=`<div class="flex items-start gap-3"><div id="status-${e}" class="text-2xl font-bold text-rose-500 w-8 text-center pt-1">${e+1}.</div><div class="flex-1"><p class="text-xl mb-3">${n}</p><div class="flex items-center gap-3"><button onclick="speak('${t.problem.replace(/'/g,"\\'")}')" class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">▶</button><input id="answer-${e}" type="number" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="정답을 입력하세요"><button onclick="gradeSingleProblem(${e})" class="bg-rose-500 text-white py-2 px-4 rounded-lg whitespace-nowrap">채점</button></div></div></div>`,a.appendChild(o)}),i.classList.remove("hidden")}catch(t){console.error("수학 문제 생성 오류:",t),o.classList.remove("hidden"),document.getElementById("math-error-message").textContent=`오류가 발생했습니다: ${t.message}`}finally{n.classList.add("hidden")}}
-    function gradeSingleProblem(t){const e=document.getElementById(`answer-${t}`).value;if(""===e)return void alert("답을 입력해주세요!");const n=mathProblems[t],o=document.getElementById(`status-${t}`);parseInt(e)===n.answer?(n.status="correct",o.innerHTML="🔴"):(n.status="incorrect",o.innerHTML="⭐")}
-    function gradeAll(){let t=0;mathProblems.forEach((e,n)=>{if("correct"!==e.status)gradeSingleProblem(n);"correct"===mathProblems[n].status&&""!==document.getElementById(`answer-${n}`).value&&t++});const e=mathProblems.length>0?Math.round(t/mathProblems.length*100):0;document.getElementById("total-score").textContent=e}
-    async function generateImageForParagraph(t,e=""){const n=e?`Crucial Context: ${e}.`:"",o=`Translate the following Korean text to English for an image generation prompt. Make it a simple, descriptive phrase. ${n} Page Text: "${t}"`,a={contents:[{role:"user",parts:[{text:o}]}]},i=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(a)});if(!i.ok)throw new Error(`번역 API 오류: ${i.statusText}`);const d=await i.json(),r=d.candidates[0].content.parts[0].text,s=`A very cute and simple children's book illustration, in the style of a cartoon, bright and soft colors, about: "${r}"`,c="stable-diffusion-xl-1024-v1-0",l="https://api.stability.ai",u=await fetch(`${l}/v1/generation/${c}/text-to-image`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json",Authorization:`Bearer ${STABILITY_API_KEY}`},body:JSON.stringify({text_prompts:[{text:s}],cfg_scale:7,height:1024,width:1024,samples:1,steps:30,style_preset:"comic-book"})});if(!u.ok)throw new Error(`이미지 생성 API 오류: ${u.statusText}`);const p=await u.json();if(!p.artifacts?.[0]?.base64)throw new Error("이미지 생성 API로부터 유효한 데이터를 받지 못했습니다.");return`data:image/png;base64,${p.artifacts[0].base64}`}
+            } catch (error) {
+                console.error("받아쓰기 생성 오류:", error);
+                errorSection.classList.remove('hidden');
+                document.getElementById('dictation-error-message').textContent = `오류가 발생했습니다: ${error.message}`;
+            } finally {
+                loadingSection.classList.add('hidden');
+            }
+        }
+        
+        function revealDictationAnswers() {
+            document.querySelectorAll('.dictation-answer-text').forEach(el => {
+                el.classList.remove('answer-hidden');
+            });
+        }
+        
+        // --- (이하 나머지 모든 함수들은 이전 버전과 동일) ---
+        async function generateBook() {
+            isManualBookMode = false;
+            const topic = document.getElementById('book-topic').value, title = document.getElementById('book-title').value, plot = document.getElementById('book-plot').value, sheets = document.getElementById('book-sheets').value, author = document.getElementById('book-author').value, isEmptyContent = document.getElementById('empty-content-checkbox').checked;
+            if (!topic || !title || !plot || !sheets || !author) { alert("모든 항목을 입력해주세요."); return; }
+            if (sheets < 3) { alert("장 수는 3장 이상이어야 합니다."); return; }
+            const loading = document.getElementById('book-loading-section'), error = document.getElementById('book-error-section');
+            loading.classList.remove('hidden'); error.classList.add('hidden');
+            try {
+                const storyParts = await generateStory(topic, title, plot, sheets - 1);
+                const imagePrompts = [title, ...storyParts];
+                const images = await Promise.all(imagePrompts.map(p => generateImageForParagraph(p)));
+                buildBookViewer(title, author, storyParts, images, isEmptyContent);
+                showPage('book-viewer');
+            } catch (err) {
+                console.error("책 만들기 오류:", err);
+                error.classList.remove('hidden');
+                document.getElementById('book-error-message').textContent = `오류가 발생했습니다: ${err.message}`;
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+        function startManualBookCreation() {
+            isManualBookMode = true;
+            buildBookViewer(null, null, [], [], false);
+            showPage('book-viewer');
+        }
+        function addManualPage() {
+            const viewer = document.getElementById('book-viewer');
+            const newSpreadIndex = viewer.querySelectorAll('.book-spread').length;
+            const spread = document.createElement('div');
+            spread.className = 'book-spread book-viewer';
+            spread.id = `spread-${newSpreadIndex}`;
+            const leftPage = document.createElement('div');
+            leftPage.className = 'book-page bg-gray-200 border-r border-gray-300 flex items-center justify-center';
+            leftPage.innerHTML = `<span class="text-gray-400">그림이 생성될 곳</span><div class="page-number" style="left: 0.5rem;">${(newSpreadIndex -1) * 2 + 1}</div>`;
+            const rightPage = document.createElement('div');
+            rightPage.className = 'book-page bg-white';
+            rightPage.innerHTML = `<textarea class="manual-text-area" placeholder="여기에 이야기를 입력하세요..."></textarea><div class="page-number" style="right: 0.5rem;">${(newSpreadIndex - 1) * 2 + 2}</div>`;
+            spread.appendChild(leftPage);
+            spread.appendChild(rightPage);
+            viewer.insertBefore(spread, document.getElementById('prev-page-btn'));
+            totalBookSpreads++;
+            changeBookPage(totalBookSpreads - 1);
+        }
+        async function completeManualBook() {
+             const completeBtn = document.querySelector('#manual-controls button:last-child');
+             completeBtn.textContent = '그림 생성 중...'; completeBtn.disabled = true;
+             const globalContext = document.getElementById('manual-book-context').value;
+            try {
+                const coverTitle = document.querySelector('#spread-0 .editable-text').textContent;
+                const coverImage = await generateImageForParagraph(coverTitle, globalContext);
+                document.querySelector('#spread-0 .book-page:last-child').style.backgroundImage = `url('${coverImage}')`;
+                const spreads = document.querySelectorAll('.book-spread');
+                for (let i = 1; i < spreads.length; i++) {
+                    const text = spreads[i].querySelector('textarea').value;
+                    if (text) {
+                        const imageUrl = await generateImageForParagraph(text, globalContext);
+                        const leftPage = spreads[i].querySelector('.book-page:first-child');
+                        leftPage.style.backgroundImage = `url('${imageUrl}')`;
+                        leftPage.innerHTML = `<div class="page-number" style="left: 0.5rem;">${(i - 1) * 2 + 1}</div>`;
+                    }
+                }
+                alert('책이 완성되었습니다! 이제 글을 편집하거나 PDF로 저장할 수 있습니다.');
+                completeBtn.textContent = '그림 다시 만들기';
+            } catch (err) {
+                 console.error("수동 책 완성 오류:", err);
+                 alert(`그림 생성 중 오류가 발생했습니다: ${err.message}`);
+                 completeBtn.textContent = '책 완성하기';
+            } finally {
+                completeBtn.disabled = false;
+            }
+        }
+        async function generateStory(topic, title, plot, storyPartCount) {
+             const prompt = `'${topic}'를 주제로, 제목은 '${title}', 줄거리는 '${plot}'인 동화책 이야기를 만들어줘. 이야기는 총 ${storyPartCount}개의 문단으로 나누어줘. 각 문단은 어린이가 이해하기 쉬운 문체여야 해. 특히, 이야기의 마지막 문단은 모든 사건이 깔끔하게 마무리되는 결말이어야 해. 전체적인 구조는 기승전결(시작-전개-위기-절정-결말)을 따라야 해.`;
+             const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { story_parts: { type: "ARRAY", items: { type: "STRING" }}}, required: ["story_parts"] }}};
+             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+             if (!response.ok) throw new Error(`스토리 생성 API 오류: ${response.statusText}`);
+             const result = await response.json();
+             const parsedResult = JSON.parse(result.candidates[0].content.parts[0].text);
+             if (!parsedResult.story_parts) throw new Error("스토리 생성 API로부터 유효한 데이터를 받지 못했습니다.");
+             return parsedResult.story_parts;
+        }
+        function buildBookViewer(title, author, storyParts, images, isEmptyContent = false) {
+            const viewer = document.getElementById('book-viewer');
+            viewer.innerHTML = '';
+            document.getElementById('manual-controls').classList.toggle('hidden', !isManualBookMode);
+            document.getElementById('standard-controls').classList.toggle('hidden', isManualBookMode);
+            document.getElementById('manual-book-context-wrapper').classList.toggle('hidden', !isManualBookMode);
+            document.getElementById('toggle-text-visibility-checkbox').checked = isEmptyContent;
+            const textVisibilityClass = isEmptyContent ? 'text-hidden' : '';
+            if (isManualBookMode) {
+                 totalBookSpreads = 1;
+                 viewer.innerHTML = `<div id="spread-0" class="book-spread book-viewer active"><div class="book-page bg-white border-r border-gray-300"><div class="text-box"><h1 class="text-3xl font-bold editable-text" contenteditable="true">제목을 입력하세요</h1></div></div><div class="book-page bg-gray-200"><div class="absolute bottom-4 right-4 text-box"><p class="editable-text" contenteditable="true">글쓴이</p></div></div></div>`;
+            } else {
+                 totalBookSpreads = 1 + storyParts.length;
+                 for (let i = 0; i < totalBookSpreads; i++) {
+                    const spread = document.createElement('div');
+                    spread.className = 'book-spread book-viewer'; spread.id = `spread-${i}`;
+                    const leftPage = document.createElement('div');
+                    leftPage.className = 'book-page bg-white border-r border-gray-300';
+                    if (i === 0) { leftPage.innerHTML = `<div class="text-box"><h1 class="text-3xl font-bold editable-text ${textVisibilityClass}">${title}</h1></div>`; } 
+                    else {
+                        if(images[i]) leftPage.style.backgroundImage = `url('${images[i]}')`;
+                        leftPage.innerHTML += `<div class="page-number" style="left: 0.5rem;">${(i - 1) * 2 + 1}</div>`;
+                    }
+                    spread.appendChild(leftPage);
+                    const rightPage = document.createElement('div');
+                    rightPage.className = 'book-page bg-white';
+                    if (i === 0) {
+                        if(images[0]) rightPage.style.backgroundImage = `url('${images[0]}')`;
+                        rightPage.innerHTML = `<div class="text-box"><h1 class="text-3xl font-bold editable-text ${textVisibilityClass}">${title}</h1></div><div class="absolute bottom-4 right-4 text-box"><p class="editable-text ${textVisibilityClass}">${author}</p></div>`;
+                    } else {
+                        const storyIndex = i - 1;
+                        if(storyParts[storyIndex]) {
+                            const storyText = storyParts[storyIndex];
+                            const wordSpans = storyText.split(/\s+/).map(w => `<span class="tts-word">${w}</span>`).join(' ');
+                            rightPage.innerHTML = `<div class="h-full w-full flex items-center justify-center"><p class="text-xl leading-loose editable-text ${textVisibilityClass}">${wordSpans}</p></div>`;
+                            rightPage.innerHTML += `<div class="page-number" style="right: 0.5rem;">${(i - 1) * 2 + 2}</div>`;
+                        }
+                    }
+                    spread.appendChild(rightPage);
+                    viewer.appendChild(spread);
+                }
+            }
+            viewer.innerHTML += `<button id="prev-page-btn" onclick="changeBookPage(-1)" class="page-nav left-2">‹</button><button id="next-page-btn" onclick="changeBookPage(1)" class="page-nav right-2">›</button><button id="read-aloud-btn" onclick="readCurrentPage()" class="absolute top-4 right-4 bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl z-10">🔊</button>`;
+            bookCurrentPage = 0;
+            updateBookView();
+        }
+        function toggleTextVisibility() { const isChecked = document.getElementById('toggle-text-visibility-checkbox').checked; document.querySelectorAll('#book-viewer .editable-text').forEach(el => { el.classList.toggle('text-hidden', isChecked); }); }
+        function changeBookPage(direction) { bookCurrentPage += direction; updateBookView(); }
+        function updateBookView() { document.querySelectorAll('.book-spread').forEach((s, i) => s.classList.toggle('active', i === bookCurrentPage)); document.getElementById('prev-page-btn').style.display = bookCurrentPage === 0 ? 'none' : 'block'; document.getElementById('next-page-btn').style.display = bookCurrentPage >= totalBookSpreads - 1 ? 'none' : 'block'; }
+        function readCurrentPage() { const activeSpread = document.getElementById(`spread-${bookCurrentPage}`); if(activeSpread) speak(activeSpread.textContent.trim()); }
+        function toggleBookEdit() { const btn = document.getElementById('edit-book-btn'); const isEditing = btn.textContent === '편집 완료'; document.querySelectorAll('#book-viewer .editable-text, #book-viewer .manual-text-area').forEach(el => { el.contentEditable = !isEditing; el.classList.toggle('outline-blue-500', !isEditing); el.classList.toggle('outline', !isEditing); }); btn.textContent = isEditing ? '글 편집' : '편집 완료'; btn.classList.toggle('bg-blue-500', isEditing); btn.classList.toggle('bg-red-500', !isEditing); }
+        async function downloadBookAsPDF() { const saveButton = document.getElementById('save-book-pdf-btn'); saveButton.textContent = 'PDF 생성 중...'; saveButton.disabled = true; const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }); const spreads = document.querySelectorAll('.book-spread'); const originalActiveSpreadIndex = bookCurrentPage; for(let i = 0; i < spreads.length; i++) { if (i > 0) pdf.addPage('a4', 'l'); document.querySelectorAll('.book-spread').forEach(s => s.classList.remove('active')); spreads[i].classList.add('active'); await new Promise(resolve => setTimeout(resolve, 50)); const canvas = await html2canvas(spreads[i], { scale: 2, useCORS: true, backgroundColor: '#ffffff' }); pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 297, 210); } pdf.save('AI_동화책.pdf'); document.querySelectorAll('.book-spread').forEach(s => s.classList.remove('active')); if(spreads[originalActiveSpreadIndex]) { spreads[originalActiveSpreadIndex].classList.add('active'); } saveButton.textContent = 'PDF 저장'; saveButton.disabled = false; }
+        document.addEventListener('click', (e) => { const target = e.target; if (target.closest('#korean-page')) { if (target.classList.contains('tts-word')) speak(target.textContent.trim()); else if (target.matches('.korean-tts-btn')) speak(target.getAttribute('data-text')); } else if (target.closest('#book-viewer-page')) { if (target.classList.contains('tts-word')) speak(target.textContent.trim()); } else if (target.closest('#math-page')) { if (target.classList.contains('tts-word')) speak(target.textContent.trim().replace(/'/g, "\\'")); } });
+        async function generateKoreanWorksheet(){const topic=document.getElementById("topic").value,wordCount=document.getElementById("word_count").value;if(!topic||!wordCount)return void alert("주제와 글자 수를 모두 입력해주세요!");const loadingSection=document.getElementById("korean-loading-section"),errorSection=document.getElementById("korean-error-section"),worksheetArea=document.getElementById("korean-worksheet-area"),actionButtons=document.getElementById("korean-action-buttons");loadingSection.classList.remove("hidden"),errorSection.classList.add("hidden"),worksheetArea.innerHTML="",actionButtons.classList.add("hidden");try{const{title:title,paragraphs:paragraphs}=await generateText(topic,wordCount);worksheetArea.innerHTML=`<div class="relative text-center mb-6"><button class="korean-tts-btn title-tts" data-text="${title}">▶</button><h2 class="text-2xl md:text-3xl font-bold">[${title}]</h2></div>`;const paragraphPromises=paragraphs.map(async(p,index)=>{const imageUrl=await generateImageForParagraph(p),wordSpans=p.split(/\s+/).map(w=>`<span class="tts-word">${w}</span>`).join(" ");return`<div class="paragraph-block mb-8 relative"><button class="korean-tts-btn paragraph-tts" data-text="${p}">▶</button><p class="text-lg md:text-xl leading-relaxed bg-gray-50 p-4 rounded-lg"><strong>[${index+1}문단]</strong> ${wordSpans}</p><div class="flex justify-center my-4"><img src="${imageUrl}" alt="${topic} 관련 이미지" class="rounded-lg shadow-md max-w-sm w-full h-auto border-4 border-white"></div></div>`}),paragraphHTMLs=await Promise.all(paragraphPromises);worksheetArea.innerHTML+=paragraphHTMLs.join("");const fullText=paragraphs.join("\n\n"),questions=await generateQuestions(fullText);let questionsHTML='<div class="questions mt-10 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl"><h3 class="text-xl md:text-2xl font-bold text-yellow-800 mb-4">💡 글을 읽고 질문에 답해 보아요!</h3><ol class="list-decimal list-inside space-y-3 text-lg text-gray-800">';questions.forEach(q=>{const qWords=q.split(/\s+/).map(w=>`<span class="tts-word">${w}</span>`).join(" ");questionsHTML+=`<li class="relative pl-2"><button class="korean-tts-btn question-tts" data-text="${q}">▶</button><p>${qWords}</p><textarea class="mt-2 w-full p-2 border border-gray-300 rounded-lg" rows="2" placeholder="답을 적어 보세요..."></textarea></li>`}),questionsHTML+="</ol></div>",worksheetArea.innerHTML+=questionsHTML,actionButtons.classList.remove("hidden")}catch(error){console.error("국어 활동지 생성 오류:",error),errorSection.classList.remove("hidden"),document.getElementById("korean-error-message").textContent=`오류가 발생했습니다: ${error.message}`}finally{loadingSection.classList.add("hidden")}}async function generateText(topic,wordCount){const prompt=`'${topic}'라는 주제로 초등학생이 이해하기 쉽도록 약 ${wordCount} 단어 분량의 글을 작성해 줘. 글은 반드시 총 4개의 문단으로 나누고, 각 문단의 내용은 명확하게 구분되어야 해. 전체 글에 대한 제목도 만들어줘.`,payload={contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{title:{type:"STRING"},paragraphs:{type:"ARRAY",items:{type:"STRING"}}},required:["title","paragraphs"]}}},response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`글 생성 API 오류: ${response.statusText}`);const result=await response.json();if(!result.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("글 생성 API로부터 유효한 데이터를 받지 못했습니다.");return JSON.parse(result.candidates[0].content.parts[0].text)}async function generateQuestions(fullText){const prompt="다음 글을 읽고, 초등학생 수준에서 글의 내용을 잘 이해했는지 확인할 수 있는 이해력 질문 4개를 만들어줘.",payload={contents:[{role:"user",parts:[{text:prompt},{text:`글 내용:\n${fullText}`}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"OBJECT",properties:{questions:{type:"ARRAY",items:{type:"STRING"}}},required:["questions"]}}},response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`질문 생성 API 오류: ${response.statusText}`);const result=await response.json();if(!result.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("질문 생성 API로부터 유효한 데이터를 받지 못했습니다.");return JSON.parse(result.candidates[0].content.parts[0].text).questions}function downloadPDF(){const{jsPDF:jsPDF}=window,element=document.getElementById("korean-worksheet-area");html2canvas(element,{scale:2,useCORS:!0}).then(canvas=>{const imgData=canvas.toDataURL("image/png"),pdf=new jsPDF("p","mm","a4"),imgProps=pdf.getImageProperties(imgData),pdfWidth=pdf.internal.pageSize.getWidth(),pdfHeight=imgProps.height*pdfWidth/imgProps.width;pdf.addImage(imgData,"PNG",0,0,pdfWidth,pdfHeight),pdf.save("AI_국어_활동지.pdf")})}async function generateMathProblems(){const example=document.getElementById("math-example").value,count=document.getElementById("math-count").value;if(!example||!count)return void alert("문제 예시와 문제 수를 모두 입력해주세요!");const loadingSection=document.getElementById("math-loading-section"),errorSection=document.getElementById("math-error-section"),problemsArea=document.getElementById("math-problems-area"),resultsSection=document.getElementById("math-results-section");loadingSection.classList.remove("hidden"),errorSection.classList.add("hidden"),problemsArea.innerHTML="",resultsSection.classList.add("hidden");try{const prompt=`'${example}'와 비슷한 유형의 초등학생용 수학 문장제 문제를 ${count}개 만들어줘. 각 문제에는 질문(problem)과 숫자 정답(answer)이 포함되어야 해.`,payload={contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"ARRAY",items:{type:"OBJECT",properties:{problem:{type:"STRING"},answer:{type:"NUMBER"}},required:["problem","answer"]}}}},response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`수학 문제 생성 API 오류: ${response.statusText}`);const result=await response.json();if(!result.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("수학 문제 생성 API로부터 유효한 데이터를 받지 못했습니다.");mathProblems=JSON.parse(result.candidates[0].content.parts[0].text),mathProblems.forEach((p,index)=>{p.status="pending";const wordsHTML=p.problem.split(" ").map(word=>`<span class="tts-word">${word}</span>`).join(" "),problemDiv=document.createElement("div");problemDiv.className="bg-white p-5 rounded-lg shadow",problemDiv.innerHTML=`<div class="flex items-start gap-3"><div id="status-${index}" class="text-2xl font-bold text-rose-500 w-8 text-center pt-1">${index+1}.</div><div class="flex-1"><p class="text-xl mb-3">${wordsHTML}</p><div class="flex items-center gap-3"><button onclick="speak('${p.problem.replace(/'/g,"\\'")}')" class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">▶</button><input id="answer-${index}" type="number" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="정답을 입력하세요"><button onclick="gradeSingleProblem(${index})" class="bg-rose-500 text-white py-2 px-4 rounded-lg whitespace-nowrap">채점</button></div></div></div>`,problemsArea.appendChild(problemDiv)}),resultsSection.classList.remove("hidden")}catch(error){console.error("수학 문제 생성 오류:",error),errorSection.classList.remove("hidden"),document.getElementById("math-error-message").textContent=`오류가 발생했습니다: ${error.message}`}finally{loadingSection.classList.add("hidden")}}function gradeSingleProblem(index){const userAnswer=document.getElementById(`answer-${index}`).value;if(""===userAnswer)return void alert("답을 입력해주세요!");const problem=mathProblems[index],statusDiv=document.getElementById(`status-${index}`);parseInt(userAnswer)===problem.answer?(problem.status="correct",statusDiv.innerHTML="🔴"):(problem.status="incorrect",statusDiv.innerHTML="⭐")}function gradeAll(){let correctCount=0;mathProblems.forEach((p,index)=>{if("correct"!==p.status)gradeSingleProblem(index);"correct"===mathProblems[index].status&&""!==document.getElementById(`answer-${index}`).value&&correctCount++});const totalScore=mathProblems.length>0?Math.round(correctCount/mathProblems.length*100):0;document.getElementById("total-score").textContent=totalScore}async function generateImageForParagraph(paragraphText, globalContext = '') {
+    const contextText = globalContext ? `Crucial Context: ${globalContext}.` : '';
+    const translationPrompt = `Translate the following Korean text to English for an image generation prompt. Make it a simple, descriptive phrase. ${contextText} Page Text: "${paragraphText}"`;
+    const translationPayload = {contents:[{role:"user",parts:[{text:translationPrompt}]}]},translationResponse=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(translationPayload)});if(!translationResponse.ok)throw new Error(`번역 API 오류: ${translationResponse.statusText}`);const translationResult=await translationResponse.json(),englishDescription=translationResult.candidates[0].content.parts[0].text,imagePrompt=`A very cute and simple children's book illustration, in the style of a cartoon, bright and soft colors, about: "${englishDescription}"`,engineId="stable-diffusion-xl-1024-v1-0",apiHost="https://api.stability.ai",response=await fetch(`${apiHost}/v1/generation/${engineId}/text-to-image`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json",Authorization:`Bearer ${STABILITY_API_KEY}`},body:JSON.stringify({text_prompts:[{text:imagePrompt}],cfg_scale:7,height:1024,width:1024,samples:1,steps:30,style_preset:"comic-book"})});if(!response.ok)throw new Error(`이미지 생성 API 오류: ${response.statusText}`);const responseJSON=await response.json();if(!responseJSON.artifacts?.[0]?.base64)throw new Error("이미지 생성 API로부터 유효한 데이터를 받지 못했습니다.");return`data:image/png;base64,${responseJSON.artifacts[0].base64}`}
     </script>
 </body>
 </html>
