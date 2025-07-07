@@ -42,6 +42,10 @@
         .hangul-btn:active { transform: scale(0.95); }
         .quiz-btn[data-quiz-state="1"] { background-color: rgba(251, 146, 60, 0.8) !important; } /* 주황색 */
         .quiz-btn[data-quiz-state="2"] { background-color: rgba(239, 68, 68, 0.8) !important; } /* 빨간색 */
+        .manage-area { display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem; min-height: 20rem; border: 2px dashed #d1d5db; background-color: #f8fafc; }
+        .manage-item, .manage-folder { width: 6rem; height: 6rem; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #d1d5db; border-radius: 0.5rem; background-color: white; cursor: grab; }
+        .manage-folder { background-color: #fef08a; }
+        .folder-items { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.25rem; }
     </style>
 </head>
 <body class="p-2 md:p-8 bg-gray-100">
@@ -56,7 +60,8 @@
                          <button onclick="showPage('dictation')" class="bg-teal-200 text-teal-700 font-bold py-2 px-4 rounded-lg hover:bg-teal-300 transition">AI 받아쓰기 →</button>
                          <button onclick="showPage('word')" class="bg-violet-200 text-violet-700 font-bold py-2 px-4 rounded-lg hover:bg-violet-300 transition">낱말 활동지 →</button>
                          <button onclick="showPage('book-creator')" class="bg-emerald-200 text-emerald-700 font-bold py-2 px-4 rounded-lg hover:bg-emerald-300 transition">책 만들기 →</button>
-                         <button onclick="showPage('math')" class="bg-rose-200 text-rose-700 font-bold py-2 px-4 rounded-lg hover:bg-rose-300 transition">AI 수학 문제 →</button>
+                        <button onclick="showPage('math')" class="bg-rose-200 text-rose-700 font-bold py-2 px-4 rounded-lg hover:bg-rose-300 transition">AI 수학 문제 →</button>
+                        <button onclick="showPage('manage')" class="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition">규칙·문제·업무 관리 →</button>
                      </div>
                  </header>
                  <div id="korean-input-section" class="bg-blue-50 p-6 rounded-xl flex flex-col md:flex-row items-center gap-4">
@@ -210,6 +215,24 @@
             </div>
         </div>
     </div>
+
+        <!-- 규칙/문제/업무 관리 페이지 -->
+        <div id="manage-page" class="page-content max-w-7xl mx-auto hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+                <header class="flex justify-between items-center mb-8">
+                    <h1 class="text-2xl md:text-4xl font-bold text-gray-800">관리 인터페이스</h1>
+                    <div class="flex gap-2">
+                        <button onclick="addFolder()" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400">+ 새 폴더</button>
+                        <button onclick="showPage('korean')" class="bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg hover:bg-blue-300 transition">← AI 국어 활동지</button>
+                    </div>
+                </header>
+                <p class="mb-4 text-gray-700">항목을 폴더로 드래그하여 정리하세요. 폴더로 이동해도 이미 배부된 숙제에는 영향이 없습니다.</p>
+                <div id="manage-desktop" class="manage-area">
+                    <div class="manage-folder" data-id="folder1"><span>폴더 1</span><div class="folder-items"></div></div>
+                    <div class="manage-folder" data-id="folder2"><span>폴더 2</span><div class="folder-items"></div></div>
+                </div>
+            </div>
+        </div>
 
     <script>
         // 전역 변수 및 상수
@@ -584,7 +607,66 @@
         async function generateMathProblems(){const t=document.getElementById("math-example").value,e=document.getElementById("math-count").value;if(!t||!e)return void alert("문제 예시와 문제 수를 모두 입력해주세요!");const n=document.getElementById("math-loading-section"),o=document.getElementById("math-error-section"),a=document.getElementById("math-problems-area"),i=document.getElementById("math-results-section");n.classList.remove("hidden"),o.classList.add("hidden"),a.innerHTML="",i.classList.add("hidden");try{const t=`'${document.getElementById("math-example").value}'와 비슷한 유형의 초등학생용 수학 문장제 문제를 ${document.getElementById("math-count").value}개 만들어줘. 각 문제에는 질문(problem)과 숫자 정답(answer)이 포함되어야 해.`,n={contents:[{role:"user",parts:[{text:t}]}],generationConfig:{responseMimeType:"application/json",responseSchema:{type:"ARRAY",items:{type:"OBJECT",properties:{problem:{type:"STRING"},answer:{type:"NUMBER"}},required:["problem","answer"]}}}},d=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(n)});if(!d.ok)throw new Error(`수학 문제 생성 API 오류: ${d.statusText}`);const r=await d.json();if(!r.candidates?.[0]?.content?.parts?.[0]?.text)throw new Error("수학 문제 생성 API로부터 유효한 데이터를 받지 못했습니다.");mathProblems=JSON.parse(r.candidates[0].content.parts[0].text),mathProblems.forEach((t,e)=>{t.status="pending";const n=t.problem.split(" ").map(t=>`<span class="tts-word">${t}</span>`).join(" "),o=document.createElement("div");o.className="bg-white p-5 rounded-lg shadow",o.innerHTML=`<div class="flex items-start gap-3"><div id="status-${e}" class="text-2xl font-bold text-rose-500 w-8 text-center pt-1">${e+1}.</div><div class="flex-1"><p class="text-xl mb-3">${n}</p><div class="flex items-center gap-3"><button onclick="speak('${t.problem.replace(/'/g,"\\'")}')" class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">▶</button><input id="answer-${e}" type="number" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="정답을 입력하세요"><button onclick="gradeSingleProblem(${e})" class="bg-rose-500 text-white py-2 px-4 rounded-lg whitespace-nowrap">채점</button></div></div></div>`,a.appendChild(o)}),i.classList.remove("hidden")}catch(t){console.error("수학 문제 생성 오류:",t),o.classList.remove("hidden"),document.getElementById("math-error-message").textContent=`오류가 발생했습니다: ${t.message}`}finally{n.classList.add("hidden")}}
         function gradeSingleProblem(t){const e=document.getElementById(`answer-${t}`).value;if(""===e)return void alert("답을 입력해주세요!");const n=mathProblems[t],o=document.getElementById(`status-${t}`);parseInt(e)===n.answer?(n.status="correct",o.innerHTML="<span class='text-green-500'>O</span>"):(n.status="incorrect",o.innerHTML="<span class='text-red-500'>X</span>")}
         function gradeAll(){let t=0;mathProblems.forEach((e,n)=>{if("correct"!==e.status)gradeSingleProblem(n);"correct"===mathProblems[n].status&&""!==document.getElementById(`answer-${n}`).value&&t++});const e=mathProblems.length>0?Math.round(t/mathProblems.length*100):0;document.getElementById("total-score").textContent=e}
-        async function generateImageForParagraph(t,e=""){const n=e?`Crucial Context: ${e}.`:"",o=`Translate the following Korean text to English for an image generation prompt. Make it a simple, descriptive phrase. ${n} Page Text: "${t}"`,a={contents:[{role:"user",parts:[{text:o}]}]},i=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(a)});if(!i.ok)throw new Error(`번역 API 오류: ${i.statusText}`);const d=await i.json(),r=d.candidates[0].content.parts[0].text,s=`A very cute and simple children's book illustration, in the style of a cartoon, bright and soft colors, about: "${r}"`,c="stable-diffusion-xl-1024-v1-0",l="https://api.stability.ai",u=await fetch(`${l}/v1/generation/${c}/text-to-image`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json",Authorization:`Bearer ${STABILITY_API_KEY}`},body:JSON.stringify({text_prompts:[{text:s}],cfg_scale:7,height:1024,width:1024,samples:1,steps:30,style_preset:"comic-book"})});if(!u.ok)throw new Error(`이미지 생성 API 오류: ${u.statusText}`);const p=await u.json();if(!p.artifacts?.[0]?.base64)throw new Error("이미지 생성 API로부터 유효한 데이터를 받지 못했습니다.");return`data:image/png;base64,${p.artifacts[0].base64}`}
+async function generateImageForParagraph(t,e=""){const n=e?`Crucial Context: ${e}.`:"",o=`Translate the following Korean text to English for an image generation prompt. Make it a simple, descriptive phrase. ${n} Page Text: "${t}"`,a={contents:[{role:"user",parts:[{text:o}]}]},i=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(a)});if(!i.ok)throw new Error(`번역 API 오류: ${i.statusText}`);const d=await i.json(),r=d.candidates[0].content.parts[0].text,s=`A very cute and simple children's book illustration, in the style of a cartoon, bright and soft colors, about: "${r}"`,c="stable-diffusion-xl-1024-v1-0",l="https://api.stability.ai",u=await fetch(`${l}/v1/generation/${c}/text-to-image`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json",Authorization:`Bearer ${STABILITY_API_KEY}`},body:JSON.stringify({text_prompts:[{text:s}],cfg_scale:7,height:1024,width:1024,samples:1,steps:30,style_preset:"comic-book"})});if(!u.ok)throw new Error(`이미지 생성 API 오류: ${u.statusText}`);const p=await u.json();if(!p.artifacts?.[0]?.base64)throw new Error("이미지 생성 API로부터 유효한 데이터를 받지 못했습니다.");return`data:image/png;base64,${p.artifacts[0].base64}`}
+
+        // 관리 페이지 로직
+        const manageItems = [
+            { id: 'r1', type: 'rule', name: '샘플 규칙' },
+            { id: 'p1', type: 'problem', name: '샘플 문제' },
+            { id: 't1', type: 'task', name: '샘플 업무' }
+        ];
+        function createItemElement(item) {
+            const div = document.createElement('div');
+            div.className = 'manage-item';
+            div.textContent = item.name;
+            div.draggable = true;
+            div.dataset.id = item.id;
+            div.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', item.id);
+            });
+            return div;
+        }
+        function renderManageItems() {
+            const desktop = document.getElementById('manage-desktop');
+            if (!desktop) return;
+            desktop.querySelectorAll('.manage-item').forEach(el => el.remove());
+            manageItems.forEach(item => {
+                if (!item.folderId) desktop.appendChild(createItemElement(item));
+            });
+            document.querySelectorAll('.manage-folder').forEach(folder => {
+                const id = folder.dataset.id;
+                const container = folder.querySelector('.folder-items');
+                container.innerHTML = '';
+                manageItems.filter(i => i.folderId === id).forEach(i => {
+                    container.appendChild(createItemElement(i));
+                });
+            });
+        }
+        function addFolder() {
+            const desktop = document.getElementById('manage-desktop');
+            const newId = 'folder' + (desktop.querySelectorAll('.manage-folder').length + 1);
+            const div = document.createElement('div');
+            div.className = 'manage-folder';
+            div.dataset.id = newId;
+            div.innerHTML = `<span>${newId}</span><div class="folder-items"></div>`;
+            desktop.appendChild(div);
+        }
+        document.addEventListener('dragover', e => {
+            if (e.target.closest('.manage-folder')) e.preventDefault();
+        });
+        document.addEventListener('drop', e => {
+            const folder = e.target.closest('.manage-folder');
+            if (folder) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const item = manageItems.find(i => i.id === id);
+                if (item) {
+                    item.folderId = folder.dataset.id;
+                    renderManageItems();
+                }
+            }
+        });
+        document.addEventListener('DOMContentLoaded', renderManageItems);
     </script>
 </body>
 </html>
